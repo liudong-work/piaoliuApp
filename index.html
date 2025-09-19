@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>漂流瓶应用</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        
+        .header {
+            background: #2196F3;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+        
+        .header p {
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+        
+        .gender-group {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .gender-button {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background: white;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        
+        .gender-button.active {
+            background: #2196F3;
+            color: white;
+            border-color: #2196F3;
+        }
+        
+        .button {
+            width: 100%;
+            padding: 15px;
+            background: #2196F3;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        
+        .button:hover {
+            background: #1976D2;
+        }
+        
+        .button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        
+        .status {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .status.success {
+            background: #E8F5E8;
+            color: #2E7D32;
+            border: 1px solid #4CAF50;
+        }
+        
+        .status.error {
+            background: #FFEBEE;
+            color: #C62828;
+            border: 1px solid #F44336;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .main-app {
+            display: none;
+        }
+        
+        .main-app.active {
+            display: block;
+        }
+        
+        .tab-bar {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 400px;
+            background: white;
+            border-top: 1px solid #eee;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+        }
+        
+        .tab-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            padding: 5px;
+            color: #666;
+        }
+        
+        .tab-item.active {
+            color: #2196F3;
+        }
+        
+        .tab-icon {
+            font-size: 24px;
+            margin-bottom: 2px;
+        }
+        
+        .tab-label {
+            font-size: 12px;
+        }
+        
+        .page {
+            padding: 20px;
+            padding-bottom: 80px;
+        }
+        
+        .bottle-button {
+            width: 100%;
+            padding: 20px;
+            margin: 15px 0;
+            border: none;
+            border-radius: 25px;
+            font-size: 18px;
+            font-weight: bold;
+            color: white;
+            cursor: pointer;
+        }
+        
+        .pick-button {
+            background: #4CAF50;
+        }
+        
+        .throw-button {
+            background: #FF9800;
+        }
+        
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 400px;
+        }
+        
+        .modal-title {
+            font-size: 20px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .modal-button {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        
+        .modal-button.cancel {
+            background: #f5f5f5;
+            color: #666;
+        }
+        
+        .modal-button.confirm {
+            background: #2196F3;
+            color: white;
+        }
+        
+        textarea {
+            width: 100%;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            resize: vertical;
+            min-height: 100px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 登录页面 -->
+        <div id="loginPage">
+            <div class="header">
+                <h1>漂流瓶</h1>
+                <p>开始你的漂流之旅</p>
+            </div>
+            <div class="content">
+                <div class="form-group">
+                    <label>昵称</label>
+                    <input type="text" id="nickname" placeholder="请输入昵称">
+                </div>
+                <div class="form-group">
+                    <label>性别</label>
+                    <div class="gender-group">
+                        <div class="gender-button" data-gender="男">男</div>
+                        <div class="gender-button" data-gender="女">女</div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>年龄</label>
+                    <input type="number" id="age" placeholder="请输入年龄">
+                </div>
+                <button class="button" onclick="startApp()">开始漂流</button>
+                <div id="status" class="status hidden"></div>
+            </div>
+        </div>
+        
+        <!-- 主应用 -->
+        <div id="mainApp" class="main-app">
+            <!-- 主页 -->
+            <div id="homePage" class="page">
+                <div class="header">
+                    <h1>漂流瓶</h1>
+                    <p id="userInfo">欢迎，<span id="userName"></span></p>
+                </div>
+                <div class="content">
+                    <button class="bottle-button pick-button" onclick="pickBottle()">捡瓶子</button>
+                    <button class="bottle-button throw-button" onclick="showThrowModal()">扔瓶子</button>
+                </div>
+            </div>
+            
+            <!-- 消息页面 -->
+            <div id="messagesPage" class="page hidden">
+                <div class="header">
+                    <h1>消息</h1>
+                </div>
+                <div class="content">
+                    <div id="messagesList">
+                        <p style="text-align: center; color: #666; margin-top: 50px;">暂无消息</p>
+                        <p style="text-align: center; color: #999; font-size: 14px;">当有人回复你的瓶子时，消息会显示在这里</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 个人资料页面 -->
+            <div id="profilePage" class="page hidden">
+                <div class="header">
+                    <h1>个人资料</h1>
+                </div>
+                <div class="content">
+                    <div style="text-align: center; margin-bottom: 30px;">
+                        <div style="width: 100px; height: 100px; border-radius: 50%; background: #2196F3; margin: 0 auto 10px; display: flex; align-items: center; justify-content: center; color: white; font-size: 40px; font-weight: bold;" id="avatar">
+                            <span id="avatarText">用</span>
+                        </div>
+                        <p style="color: #2196F3; font-size: 14px;">点击更换头像</p>
+                    </div>
+                    <div class="form-group">
+                        <label>昵称</label>
+                        <input type="text" id="profileNickname" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label>性别</label>
+                        <input type="text" id="profileGender" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label>年龄</label>
+                        <input type="text" id="profileAge" readonly>
+                    </div>
+                    <button class="button" onclick="logout()">退出登录</button>
+                </div>
+            </div>
+            
+            <!-- 底部导航 -->
+            <div class="tab-bar">
+                <div class="tab-item active" onclick="switchTab('home')">
+                    <div class="tab-icon">🏠</div>
+                    <div class="tab-label">主页</div>
+                </div>
+                <div class="tab-item" onclick="switchTab('messages')">
+                    <div class="tab-icon">💬</div>
+                    <div class="tab-label">消息</div>
+                </div>
+                <div class="tab-item" onclick="switchTab('profile')">
+                    <div class="tab-icon">👤</div>
+                    <div class="tab-label">我的</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 扔瓶子模态框 -->
+        <div id="throwModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-title">扔瓶子</div>
+                <textarea id="bottleContent" placeholder="写下你想说的话..."></textarea>
+                <div class="modal-buttons">
+                    <button class="modal-button cancel" onclick="hideThrowModal()">取消</button>
+                    <button class="modal-button confirm" onclick="throwBottle()">扔出</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 捡到的瓶子模态框 -->
+        <div id="pickedModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-title">捡到的瓶子</div>
+                <div id="pickedContent">
+                    <p style="text-align: center; color: #666;">正在捡瓶子...</p>
+                </div>
+                <div class="modal-buttons">
+                    <button class="modal-button cancel" onclick="hidePickedModal()">关闭</button>
+                    <button class="modal-button confirm" onclick="replyBottle()">回复</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 回复模态框 -->
+        <div id="replyModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-title">回复瓶子</div>
+                <textarea id="replyContent" placeholder="写下你的回复..."></textarea>
+                <div class="modal-buttons">
+                    <button class="modal-button cancel" onclick="hideReplyModal()">取消</button>
+                    <button class="modal-button confirm" onclick="sendReply()">发送</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentUser = null;
+        let currentBottle = null;
+        
+        // 性别选择
+        document.querySelectorAll('.gender-button').forEach(button => {
+            button.addEventListener('click', function() {
+                document.querySelectorAll('.gender-button').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+        
+        // 开始应用
+        function startApp() {
+            const nickname = document.getElementById('nickname').value;
+            const gender = document.querySelector('.gender-button.active')?.dataset.gender;
+            const age = document.getElementById('age').value;
+            
+            if (!nickname || !gender || !age) {
+                showStatus('请填写完整信息', 'error');
+                return;
+            }
+            
+            currentUser = {
+                id: 'user_' + Date.now(),
+                nickname: nickname,
+                gender: gender,
+                age: parseInt(age)
+            };
+            
+            showStatus('注册成功！', 'success');
+            
+            setTimeout(() => {
+                document.getElementById('loginPage').style.display = 'none';
+                document.getElementById('mainApp').classList.add('active');
+                document.getElementById('userName').textContent = currentUser.nickname;
+                document.getElementById('avatarText').textContent = currentUser.nickname.charAt(0);
+                document.getElementById('profileNickname').value = currentUser.nickname;
+                document.getElementById('profileGender').value = currentUser.gender;
+                document.getElementById('profileAge').value = currentUser.age + '岁';
+            }, 1000);
+        }
+        
+        // 显示状态
+        function showStatus(message, type) {
+            const status = document.getElementById('status');
+            status.textContent = message;
+            status.className = `status ${type}`;
+            status.classList.remove('hidden');
+            
+            setTimeout(() => {
+                status.classList.add('hidden');
+            }, 3000);
+        }
+        
+        // 切换标签页
+        function switchTab(tab) {
+            // 隐藏所有页面
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.add('hidden');
+            });
+            
+            // 移除所有标签的激活状态
+            document.querySelectorAll('.tab-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // 显示对应页面
+            if (tab === 'home') {
+                document.getElementById('homePage').classList.remove('hidden');
+            } else if (tab === 'messages') {
+                document.getElementById('messagesPage').classList.remove('hidden');
+            } else if (tab === 'profile') {
+                document.getElementById('profilePage').classList.remove('hidden');
+            }
+            
+            // 激活对应标签
+            event.target.closest('.tab-item').classList.add('active');
+        }
+        
+        // 显示扔瓶子模态框
+        function showThrowModal() {
+            document.getElementById('throwModal').classList.add('active');
+        }
+        
+        // 隐藏扔瓶子模态框
+        function hideThrowModal() {
+            document.getElementById('throwModal').classList.remove('active');
+            document.getElementById('bottleContent').value = '';
+        }
+        
+        // 扔瓶子
+        function throwBottle() {
+            const content = document.getElementById('bottleContent').value;
+            if (!content.trim()) {
+                alert('请输入瓶子内容');
+                return;
+            }
+            
+            // 模拟扔瓶子
+            const bottle = {
+                id: 'bottle_' + Date.now(),
+                userId: currentUser.id,
+                content: content,
+                createdAt: new Date().toISOString()
+            };
+            
+            // 保存到本地存储
+            let bottles = JSON.parse(localStorage.getItem('bottles') || '[]');
+            bottles.push(bottle);
+            localStorage.setItem('bottles', JSON.stringify(bottles));
+            
+            alert('瓶子已扔出！');
+            hideThrowModal();
+        }
+        
+        // 捡瓶子
+        function pickBottle() {
+            document.getElementById('pickedModal').classList.add('active');
+            
+            // 模拟捡瓶子
+            setTimeout(() => {
+                const bottles = JSON.parse(localStorage.getItem('bottles') || '[]');
+                const availableBottles = bottles.filter(b => b.userId !== currentUser.id);
+                
+                if (availableBottles.length === 0) {
+                    document.getElementById('pickedContent').innerHTML = '<p style="text-align: center; color: #666;">暂时没有可捡的瓶子</p>';
+                } else {
+                    const randomBottle = availableBottles[Math.floor(Math.random() * availableBottles.length)];
+                    currentBottle = randomBottle;
+                    
+                    document.getElementById('pickedContent').innerHTML = `
+                        <div style="margin-bottom: 15px;">
+                            <div style="display: flex; align-items: center; margin-bottom: 10px;">
+                                <div style="width: 40px; height: 40px; border-radius: 50%; background: #2196F3; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; margin-right: 10px;">
+                                    ${randomBottle.userId.charAt(5)}
+                                </div>
+                                <div>
+                                    <div style="font-weight: bold;">用户${randomBottle.userId.slice(-4)}</div>
+                                    <div style="font-size: 12px; color: #666;">${new Date(randomBottle.createdAt).toLocaleString()}</div>
+                                </div>
+                            </div>
+                            <div style="line-height: 1.5;">${randomBottle.content}</div>
+                        </div>
+                    `;
+                }
+            }, 1000);
+        }
+        
+        // 隐藏捡到的瓶子模态框
+        function hidePickedModal() {
+            document.getElementById('pickedModal').classList.remove('active');
+            currentBottle = null;
+        }
+        
+        // 回复瓶子
+        function replyBottle() {
+            if (!currentBottle) {
+                alert('没有可回复的瓶子');
+                return;
+            }
+            
+            document.getElementById('pickedModal').classList.remove('active');
+            document.getElementById('replyModal').classList.add('active');
+        }
+        
+        // 隐藏回复模态框
+        function hideReplyModal() {
+            document.getElementById('replyModal').classList.remove('active');
+            document.getElementById('replyContent').value = '';
+        }
+        
+        // 发送回复
+        function sendReply() {
+            const content = document.getElementById('replyContent').value;
+            if (!content.trim()) {
+                alert('请输入回复内容');
+                return;
+            }
+            
+            // 模拟发送回复
+            const message = {
+                id: 'message_' + Date.now(),
+                bottleId: currentBottle.id,
+                senderId: currentUser.id,
+                receiverId: currentBottle.userId,
+                content: content,
+                createdAt: new Date().toISOString()
+            };
+            
+            // 保存到本地存储
+            let messages = JSON.parse(localStorage.getItem('messages') || '[]');
+            messages.push(message);
+            localStorage.setItem('messages', JSON.stringify(messages));
+            
+            alert('回复已发送！');
+            hideReplyModal();
+            currentBottle = null;
+        }
+        
+        // 退出登录
+        function logout() {
+            if (confirm('确定要退出登录吗？')) {
+                currentUser = null;
+                document.getElementById('mainApp').classList.remove('active');
+                document.getElementById('loginPage').style.display = 'block';
+                
+                // 清空表单
+                document.getElementById('nickname').value = '';
+                document.getElementById('age').value = '';
+                document.querySelectorAll('.gender-button').forEach(b => b.classList.remove('active'));
+            }
+        }
+        
+        // 页面加载完成后的初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 检查是否有保存的用户信息
+            const savedUser = localStorage.getItem('currentUser');
+            if (savedUser) {
+                currentUser = JSON.parse(savedUser);
+                document.getElementById('loginPage').style.display = 'none';
+                document.getElementById('mainApp').classList.add('active');
+                document.getElementById('userName').textContent = currentUser.nickname;
+                document.getElementById('avatarText').textContent = currentUser.nickname.charAt(0);
+                document.getElementById('profileNickname').value = currentUser.nickname;
+                document.getElementById('profileGender').value = currentUser.gender;
+                document.getElementById('profileAge').value = currentUser.age + '岁';
+            }
+        });
+        
+        // 保存用户信息
+        function saveUser() {
+            if (currentUser) {
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+            }
+        }
+        
+        // 在用户信息变化时保存
+        setInterval(saveUser, 5000);
+    </script>
+</body>
+</html>

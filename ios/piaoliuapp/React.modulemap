@@ -1,0 +1,30 @@
+module React {
+    umbrella header "React/Base/RCTBridgeDelegate.h"
+    export *
+    module * { export * }
+    
+    module RCTBridgeDelegate {
+        header "React/Base/RCTBridgeDelegate.h"
+        export *
+    }
+    
+    module RCTBridge {
+        header "React/Base/RCTBridge.h"
+        export *
+    }
+    
+    module RCTBundleURLProvider {
+        header "React/Base/RCTBundleURLProvider.h"
+        export *
+    }
+    
+    module RCTRootView {
+        header "React/Base/RCTRootView.h"
+        export *
+    }
+    
+    module RCTJavaScriptLoader {
+        header "React/Base/RCTJavaScriptLoader.h"
+        export *
+    }
+}
