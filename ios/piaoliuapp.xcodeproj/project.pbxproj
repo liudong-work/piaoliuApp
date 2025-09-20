@@ -12,6 +12,9 @@
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		A5A8F9FFF1A012DAC61BCB7C /* libPods-piaoliuapp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DA980FC1F84CC072C90A1073 /* libPods-piaoliuapp.a */; };
+		A6FA6DAF2613532EA0E9E05A /* libPods-piaoliuapp-piaoliuappTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C4981D799E2AB8EE958663A /* libPods-piaoliuapp-piaoliuappTests.a */; };
+		B695C9D87A64D580AAE67582 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = D48E831D625CA28D8CE020EE /* PrivacyInfo.xcprivacy */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -34,7 +37,14 @@
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = piaoliuapp/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = piaoliuapp/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = piaoliuapp/main.m; sourceTree = "<group>"; };
+		1C4981D799E2AB8EE958663A /* libPods-piaoliuapp-piaoliuappTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-piaoliuapp-piaoliuappTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		4530D4DAE36EC91FAD8075F2 /* Pods-piaoliuapp-piaoliuappTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-piaoliuapp-piaoliuappTests.debug.xcconfig"; path = "Target Support Files/Pods-piaoliuapp-piaoliuappTests/Pods-piaoliuapp-piaoliuappTests.debug.xcconfig"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = piaoliuapp/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		8EDE5EE734005A28DC6472F1 /* Pods-piaoliuapp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-piaoliuapp.release.xcconfig"; path = "Target Support Files/Pods-piaoliuapp/Pods-piaoliuapp.release.xcconfig"; sourceTree = "<group>"; };
+		94E1E4AC0527E1E187D2BB9C /* Pods-piaoliuapp-piaoliuappTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-piaoliuapp-piaoliuappTests.release.xcconfig"; path = "Target Support Files/Pods-piaoliuapp-piaoliuappTests/Pods-piaoliuapp-piaoliuappTests.release.xcconfig"; sourceTree = "<group>"; };
+		B65E741D13CCBB4A731AA6F3 /* Pods-piaoliuapp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-piaoliuapp.debug.xcconfig"; path = "Target Support Files/Pods-piaoliuapp/Pods-piaoliuapp.debug.xcconfig"; sourceTree = "<group>"; };
+		D48E831D625CA28D8CE020EE /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; name = PrivacyInfo.xcprivacy; path = piaoliuapp/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		DA980FC1F84CC072C90A1073 /* libPods-piaoliuapp.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-piaoliuapp.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -43,6 +53,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A6FA6DAF2613532EA0E9E05A /* libPods-piaoliuapp-piaoliuappTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -50,6 +61,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A5A8F9FFF1A012DAC61BCB7C /* libPods-piaoliuapp.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -82,6 +94,7 @@
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
 				13B07FB71A68108700A75B9A /* main.m */,
+				D48E831D625CA28D8CE020EE /* PrivacyInfo.xcprivacy */,
 			);
 			name = piaoliuapp;
 			sourceTree = "<group>";
@@ -90,6 +103,8 @@
 			isa = PBXGroup;
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
+				DA980FC1F84CC072C90A1073 /* libPods-piaoliuapp.a */,
+				1C4981D799E2AB8EE958663A /* libPods-piaoliuapp-piaoliuappTests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -109,6 +124,7 @@
 				00E356EF1AD99517003FC87E /* piaoliuappTests */,
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
+				B0CA8D5C88F46CBCA058D033 /* Pods */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -124,6 +140,18 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		B0CA8D5C88F46CBCA058D033 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				B65E741D13CCBB4A731AA6F3 /* Pods-piaoliuapp.debug.xcconfig */,
+				8EDE5EE734005A28DC6472F1 /* Pods-piaoliuapp.release.xcconfig */,
+				4530D4DAE36EC91FAD8075F2 /* Pods-piaoliuapp-piaoliuappTests.debug.xcconfig */,
+				94E1E4AC0527E1E187D2BB9C /* Pods-piaoliuapp-piaoliuappTests.release.xcconfig */,
+			);
+			name = Pods;
+			path = Pods;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -131,9 +159,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "piaoliuappTests" */;
 			buildPhases = (
+				01CF4AACB1EFAEBD58C9566B /* [CP] Check Pods Manifest.lock */,
 				00E356EA1AD99517003FC87E /* Sources */,
 				00E356EB1AD99517003FC87E /* Frameworks */,
 				00E356EC1AD99517003FC87E /* Resources */,
+				927643626BB8700979239216 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -149,11 +179,13 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "piaoliuapp" */;
 			buildPhases = (
+				4A17A619E72C995649ADFA4E /* [CP] Check Pods Manifest.lock */,
 				FD10A7F022414F080027D42C /* Start Packager */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
+				D4738D9AC378E48929AE4705 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -215,6 +247,7 @@
 			files = (
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
+				B695C9D87A64D580AAE67582 /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -236,6 +269,84 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "set -e\n\nWITH_ENVIRONMENT=\"../node_modules/react-native/scripts/xcode/with-environment.sh\"\nREACT_NATIVE_XCODE=\"../node_modules/react-native/scripts/react-native-xcode.sh\"\n\n/bin/sh -c \"$WITH_ENVIRONMENT $REACT_NATIVE_XCODE\"\n";
+		};
+		01CF4AACB1EFAEBD58C9566B /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-piaoliuapp-piaoliuappTests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		4A17A619E72C995649ADFA4E /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-piaoliuapp-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		927643626BB8700979239216 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-piaoliuapp-piaoliuappTests/Pods-piaoliuapp-piaoliuappTests-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-piaoliuapp-piaoliuappTests/Pods-piaoliuapp-piaoliuappTests-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-piaoliuapp-piaoliuappTests/Pods-piaoliuapp-piaoliuappTests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		D4738D9AC378E48929AE4705 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-piaoliuapp/Pods-piaoliuapp-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-piaoliuapp/Pods-piaoliuapp-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-piaoliuapp/Pods-piaoliuapp-resources.sh\"\n";
+			showEnvVarsInLog = 0;
 		};
 		FD10A7F022414F080027D42C /* Start Packager */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -289,6 +400,7 @@
 /* Begin XCBuildConfiguration section */
 		00E356F61AD99517003FC87E /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 4530D4DAE36EC91FAD8075F2 /* Pods-piaoliuapp-piaoliuappTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -315,6 +427,7 @@
 		};
 		00E356F71AD99517003FC87E /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 94E1E4AC0527E1E187D2BB9C /* Pods-piaoliuapp-piaoliuappTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
@@ -338,16 +451,19 @@
 		};
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = B65E741D13CCBB4A731AA6F3 /* Pods-piaoliuapp.debug.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_BITCODE = NO;
 				HEADER_SEARCH_PATHS = (
-					"$(SRCROOT)/../node_modules/react-native/React",
-					"$(SRCROOT)/../node_modules/react-native/React/Base",
-					"$(SRCROOT)/../node_modules/react-native/React/CxxBridge",
-					"$(SRCROOT)/../node_modules/react-native/React/DevSupport",
+					"$(SRCROOT)/../node_modules/react-native/React/**",
+					"$(SRCROOT)/../node_modules/react-native/React/Base/**",
+					"$(SRCROOT)/../node_modules/react-native/React/CxxBridge/**",
+					"$(SRCROOT)/../node_modules/react-native/React/DevSupport/**",
 					"$(SRCROOT)",
+					"$(SRCROOT)/Pods/Headers/Public",
+					"$(SRCROOT)/Pods/Headers/Private",
 				);
 				INFOPLIST_FILE = piaoliuapp/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -371,15 +487,18 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 8EDE5EE734005A28DC6472F1 /* Pods-piaoliuapp.release.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				HEADER_SEARCH_PATHS = (
-					"$(SRCROOT)/../node_modules/react-native/React",
-					"$(SRCROOT)/../node_modules/react-native/React/Base",
-					"$(SRCROOT)/../node_modules/react-native/React/CxxBridge",
-					"$(SRCROOT)/../node_modules/react-native/React/DevSupport",
+					"$(SRCROOT)/../node_modules/react-native/React/**",
+					"$(SRCROOT)/../node_modules/react-native/React/Base/**",
+					"$(SRCROOT)/../node_modules/react-native/React/CxxBridge/**",
+					"$(SRCROOT)/../node_modules/react-native/React/DevSupport/**",
 					"$(SRCROOT)",
+					"$(SRCROOT)/Pods/Headers/Public",
+					"$(SRCROOT)/Pods/Headers/Private",
 				);
 				INFOPLIST_FILE = piaoliuapp/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -441,6 +560,8 @@
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
+					"RCT_ENABLE_INSPECTOR=1",
+					_LIBCPP_ENABLE_CXX17_REMOVED_UNARY_BINARY_FUNCTION,
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -463,6 +584,7 @@
 				NEW_SETTING = "";
 				NEW_SETTING1 = "";
 				ONLY_ACTIVE_ARCH = YES;
+				OTHER_CFLAGS = "$(inherited)";
 				OTHER_CPLUSPLUSFLAGS = (
 					"$(OTHER_CFLAGS)",
 					"-DFOLLY_NO_CONFIG",
@@ -470,6 +592,11 @@
 					"-DFOLLY_USE_LIBCPP=1",
 					"-DFOLLY_CFG_NO_COROUTINES=1",
 				);
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					" ",
+				);
+				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -510,6 +637,10 @@
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					_LIBCPP_ENABLE_CXX17_REMOVED_UNARY_BINARY_FUNCTION,
+				);
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
@@ -529,6 +660,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				NEW_SETTING = "";
 				NEW_SETTING1 = "";
+				OTHER_CFLAGS = "$(inherited)";
 				OTHER_CPLUSPLUSFLAGS = (
 					"$(OTHER_CFLAGS)",
 					"-DFOLLY_NO_CONFIG",
@@ -536,6 +668,11 @@
 					"-DFOLLY_USE_LIBCPP=1",
 					"-DFOLLY_CFG_NO_COROUTINES=1",
 				);
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					" ",
+				);
+				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};

@@ -1,32 +1,32 @@
 #import "AppDelegate.h"
 
+#import <React-Core/React/RCTBundleURLProvider.h>
+#import <React-Core/React/RCTRootView.h>
+
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
   self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
   
-  // 创建一个简单的视图控制器
-  UIViewController *rootViewController = [[UIViewController alloc] init];
-  rootViewController.view.backgroundColor = [UIColor whiteColor];
+  // React Native 配置
+  NSURL *jsCodeLocation;
   
-  // 添加一个标签显示应用信息
-  UILabel *label = [[UILabel alloc] init];
-  label.text = @"漂流瓶应用\nReact Native 功能正在加载中...";
-  label.textAlignment = NSTextAlignmentCenter;
-  label.numberOfLines = 0;
-  label.font = [UIFont systemFontOfSize:18];
-  label.translatesAutoresizingMaskIntoConstraints = NO;
-  [rootViewController.view addSubview:label];
+#ifdef DEBUG
+      jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index"];
+#else
+  jsCodeLocation = [[NSBundle mainBundle] URLForResource:@"main" withExtension:@"jsbundle"];
+#endif
   
-  // 设置约束
-  [NSLayoutConstraint activateConstraints:@[
-    [label.centerXAnchor constraintEqualToAnchor:rootViewController.view.centerXAnchor],
-    [label.centerYAnchor constraintEqualToAnchor:rootViewController.view.centerYAnchor],
-    [label.leadingAnchor constraintGreaterThanOrEqualToAnchor:rootViewController.view.leadingAnchor constant:20],
-    [label.trailingAnchor constraintLessThanOrEqualToAnchor:rootViewController.view.trailingAnchor constant:-20]
-  ]];
+  RCTRootView *rootView = [[RCTRootView alloc] initWithBundleURL:jsCodeLocation
+                                                      moduleName:@"piaoliuapp"
+                                               initialProperties:nil
+                                                   launchOptions:launchOptions];
   
+  rootView.backgroundColor = [[UIColor alloc] initWithRed:1.0f green:1.0f blue:1.0f alpha:1];
+  
+  UIViewController *rootViewController = [UIViewController new];
+  rootViewController.view = rootView;
   self.window.rootViewController = rootViewController;
   [self.window makeKeyAndVisible];
   

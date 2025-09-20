@@ -1,16 +1,19 @@
 require_relative '../node_modules/react-native/scripts/react_native_pods'
 require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'
 
-platform :ios, '11.0'
-prepare_react_native_project!
+platform :ios, '13.4'
 
 target 'piaoliuapp' do
   config = use_native_modules!
 
+  # 使用特定版本的 RCT-Folly 避免编译错误
+  pod 'RCT-Folly', :podspec => '../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec'
+
+  # React Native 核心库
   use_react_native!(
     :path => config[:reactNativePath],
-    :hermes_enabled => false,   # 可以改 true 开启 Hermes
-    :fabric_enabled => false,   # 可以改 true 开启新架构 Fabric
+    :hermes_enabled => false,        # 禁用 Hermes 避免 RCT-Folly 问题
+    :fabric_enabled => false,        # 可改 true 开启新架构 Fabric
     :flipper_configuration => FlipperConfiguration.disabled,
     :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
@@ -30,6 +33,18 @@ target 'piaoliuapp' do
       target.build_configurations.each do |config|
         config.build_settings['CLANG_CXX_LANGUAGE_STANDARD'] = 'c++17'
         config.build_settings['CLANG_CXX_LIBRARY'] = 'libc++'
+        config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '13.4'
+        
+        # 解决 RCT-Folly 编译错误
+        if target.name == 'RCT-Folly'
+          config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] ||= []
+          config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] << 'FOLLY_NO_CONFIG=1'
+          config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] << 'FOLLY_MOBILE=1'
+          config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] << 'FOLLY_USE_LIBCPP=1'
+          config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] << 'FOLLY_HAVE_PTHREAD=1'
+          # 跳过有问题的文件
+          config.build_settings['EXCLUDED_SOURCE_FILE_NAMES'] = 'SysUio.cpp NetOps.cpp FileUtil.cpp'
+        end
       end
     end
   end
