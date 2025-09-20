@@ -20,11 +20,11 @@ function MainTabs() {
           let iconName;
 
           if (route.name === 'Home') {
-            iconName = 'waves'; // 海浪图标，更符合漂流瓶主题
+            iconName = 'home'; // 主页图标
           } else if (route.name === 'Profile') {
-            iconName = 'account-circle'; // 用户账户图标
+            iconName = 'person'; // 个人中心图标
           } else if (route.name === 'Messages') {
-            iconName = 'mail'; // 邮件图标，表示消息
+            iconName = 'chat'; // 聊天图标，更符合消息主题
           }
 
           return <Icon name={iconName} size={size} color={color} />;
