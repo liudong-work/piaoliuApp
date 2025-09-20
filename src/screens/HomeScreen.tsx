@@ -44,19 +44,31 @@ export default function HomeScreen() {
       return;
     }
 
+    if (bottleContent.length > 500) {
+      Alert.alert('提示', '瓶子内容不能超过500字');
+      return;
+    }
+
     try {
       const response = await axios.post(`${API_BASE_URL}/bottle/throw`, {
         userId: user.id,
-        content: bottleContent,
+        content: bottleContent.trim(),
       });
 
       if (response.data.success) {
-        Alert.alert('成功', '瓶子已扔出！');
-        setBottleContent('');
-        setShowThrowModal(false);
+        Alert.alert('成功', '瓶子已扔出！愿它能找到有缘人 🌊', [
+          {
+            text: '确定',
+            onPress: () => {
+              setBottleContent('');
+              setShowThrowModal(false);
+            }
+          }
+        ]);
       }
     } catch (error) {
-      Alert.alert('错误', '扔瓶子失败，请重试');
+      console.error('扔瓶子错误:', error);
+      Alert.alert('错误', '扔瓶子失败，请检查网络连接后重试');
     }
   };
 
@@ -111,7 +123,7 @@ export default function HomeScreen() {
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.throwButton} onPress={() => setShowThrowModal(true)}>
-          <Text style={styles.buttonText}>扔瓶子</Text>
+          <Text style={styles.buttonText}>🌊 扔瓶子</Text>
         </TouchableOpacity>
       </View>
 
@@ -119,27 +131,40 @@ export default function HomeScreen() {
       <Modal visible={showThrowModal} animationType="slide" transparent>
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>扔瓶子</Text>
+            <Text style={styles.modalTitle}>🌊 扔瓶子</Text>
+            <Text style={styles.modalSubtitle}>写下你想说的话，让瓶子带着你的心声漂向远方...</Text>
             <TextInput
               style={styles.textArea}
-              placeholder="写下你想说的话..."
+              placeholder="分享你的心情、故事或想法..."
               value={bottleContent}
               onChangeText={setBottleContent}
               multiline
               numberOfLines={6}
+              maxLength={500}
             />
+            <Text style={styles.charCount}>
+              {bottleContent.length}/500
+            </Text>
             <View style={styles.modalButtons}>
               <TouchableOpacity
                 style={[styles.modalButton, styles.cancelButton]}
-                onPress={() => setShowThrowModal(false)}
+                onPress={() => {
+                  setBottleContent('');
+                  setShowThrowModal(false);
+                }}
               >
                 <Text style={styles.cancelButtonText}>取消</Text>
               </TouchableOpacity>
               <TouchableOpacity
-                style={[styles.modalButton, styles.confirmButton]}
+                style={[
+                  styles.modalButton, 
+                  styles.confirmButton,
+                  !bottleContent.trim() && styles.disabledButton
+                ]}
                 onPress={throwBottle}
+                disabled={!bottleContent.trim()}
               >
-                <Text style={styles.confirmButtonText}>扔出</Text>
+                <Text style={styles.confirmButtonText}>🌊 扔出瓶子</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -231,7 +256,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#f5f5f5',
   },
   header: {
-    backgroundColor: '#2196F3',
+    backgroundColor: '#00BCD4',
     padding: 20,
     paddingTop: 50,
     alignItems: 'center',
@@ -266,7 +291,7 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
   },
   throwButton: {
-    backgroundColor: '#FF9800',
+    backgroundColor: '#00BCD4',
     paddingHorizontal: 40,
     paddingVertical: 20,
     borderRadius: 25,
@@ -296,7 +321,15 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     textAlign: 'center',
+    marginBottom: 10,
+    color: '#00BCD4',
+  },
+  modalSubtitle: {
+    fontSize: 14,
+    color: '#666',
+    textAlign: 'center',
     marginBottom: 20,
+    lineHeight: 20,
   },
   textArea: {
     borderWidth: 1,
@@ -305,6 +338,13 @@ const styles = StyleSheet.create({
     padding: 15,
     fontSize: 16,
     textAlignVertical: 'top',
+    marginBottom: 10,
+    minHeight: 120,
+  },
+  charCount: {
+    fontSize: 12,
+    color: '#999',
+    textAlign: 'right',
     marginBottom: 20,
   },
   modalButtons: {
@@ -322,7 +362,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#f5f5f5',
   },
   confirmButton: {
-    backgroundColor: '#2196F3',
+    backgroundColor: '#00BCD4',
+  },
+  disabledButton: {
+    backgroundColor: '#ccc',
   },
   cancelButtonText: {
     color: '#666',
