@@ -20,17 +20,17 @@ function MainTabs() {
           let iconName;
 
           if (route.name === 'Home') {
-            iconName = 'home';
+            iconName = 'waves'; // 海浪图标，更符合漂流瓶主题
           } else if (route.name === 'Profile') {
-            iconName = 'person';
+            iconName = 'account-circle'; // 用户账户图标
           } else if (route.name === 'Messages') {
-            iconName = 'message';
+            iconName = 'mail'; // 邮件图标，表示消息
           }
 
           return <Icon name={iconName} size={size} color={color} />;
         },
-        tabBarActiveTintColor: '#2196F3',
-        tabBarInactiveTintColor: 'gray',
+        tabBarActiveTintColor: '#00BCD4', // 青蓝色，海洋主题
+        tabBarInactiveTintColor: '#B0BEC5', // 浅灰色
         headerShown: false,
       })}
     >
