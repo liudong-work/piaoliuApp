@@ -136,11 +136,21 @@ app.post('/api/message/send', (req, res) => {
     return res.status(404).json({ success: false, message: '瓶子不存在' });
   }
   
+  // 确定接收者：如果发送者是瓶子作者，则接收者是捡瓶子的人；否则接收者是瓶子作者
+  let receiverId;
+  if (senderId === bottle.userId) {
+    // 发送者是瓶子作者，接收者是捡瓶子的人
+    receiverId = bottle.pickedBy;
+  } else {
+    // 发送者是捡瓶子的人，接收者是瓶子作者
+    receiverId = bottle.userId;
+  }
+  
   const message = {
     id: uuidv4(),
     bottleId,
     senderId,
-    receiverId: bottle.userId,
+    receiverId: receiverId,
     content,
     createdAt: new Date().toISOString(),
     isRead: false
@@ -152,16 +162,64 @@ app.post('/api/message/send', (req, res) => {
 
 app.get('/api/messages/:userId', (req, res) => {
   const userId = req.params.userId;
-  const userMessages = messages.filter(m => m.receiverId === userId);
+  
+  // 获取所有与当前用户相关的消息（作为发送者或接收者）
+  const userRelatedMessages = messages.filter(m => 
+    m.senderId === userId || m.receiverId === userId
+  );
+  
+  // 按bottleId分组，获取每个对话的最后一条消息
+  const conversationMap = new Map();
+  
+  userRelatedMessages.forEach(msg => {
+    const bottleId = msg.bottleId;
+    if (!conversationMap.has(bottleId) || 
+        new Date(msg.createdAt) > new Date(conversationMap.get(bottleId).createdAt)) {
+      conversationMap.set(bottleId, msg);
+    }
+  });
+  
+  // 转换为数组并按时间排序（最新的在前）
+  const lastMessages = Array.from(conversationMap.values())
+    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
   
   // 获取发送者信息
-  const messagesWithSender = userMessages.map(msg => {
+  const messagesWithSender = lastMessages.map(msg => {
+    const sender = users.find(u => u.id === msg.senderId);
+    const receiver = users.find(u => u.id === msg.receiverId);
+    
+    return {
+      ...msg,
+      sender: {
+        nickname: sender ? sender.nickname : '未知用户',
+        avatar: sender ? sender.avatar : null
+      },
+      receiver: {
+        nickname: receiver ? receiver.nickname : '未知用户',
+        avatar: receiver ? receiver.avatar : null
+      },
+      // 添加对话信息
+      conversationWith: msg.senderId === userId ? receiver : sender,
+      isMyMessage: msg.senderId === userId
+    };
+  });
+  
+  res.json({ success: true, messages: messagesWithSender });
+});
+
+// 获取聊天记录API
+app.get('/api/messages/chat/:bottleId', (req, res) => {
+  const bottleId = req.params.bottleId;
+  const chatMessages = messages.filter(m => m.bottleId === bottleId);
+  
+  // 获取发送者信息
+  const messagesWithSender = chatMessages.map(msg => {
     const sender = users.find(u => u.id === msg.senderId);
     return {
       ...msg,
       sender: {
-        nickname: sender.nickname,
-        avatar: sender.avatar
+        nickname: sender ? sender.nickname : '未知用户',
+        avatar: sender ? sender.avatar : null
       }
     };
   });

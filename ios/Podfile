@@ -8,6 +8,9 @@ target 'piaoliuapp' do
 
   # 使用特定版本的 RCT-Folly 避免编译错误
   pod 'RCT-Folly', :podspec => '../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec'
+  
+  # 添加 react-native-vector-icons
+  pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
 
   # React Native 核心库
   use_react_native!(
