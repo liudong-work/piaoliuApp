@@ -11,6 +11,11 @@ target 'piaoliuapp' do
   
   # 添加 react-native-vector-icons
   pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
+  
+  # WebRTC 相关依赖 (暂时禁用，等待网络问题解决)
+  # pod 'react-native-webrtc', :path => '../node_modules/react-native-webrtc'
+  # pod 'RNPermissions', :path => '../node_modules/react-native-permissions'
+  # pod 'ReactNativeIncallManager', :path => '../node_modules/react-native-incall-manager'
 
   # React Native 核心库
   use_react_native!(

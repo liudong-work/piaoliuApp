@@ -14,6 +14,10 @@ import {
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
+import Icon from 'react-native-vector-icons/MaterialIcons';
+// import io from 'socket.io-client';
+// import WebRTCCallManager, { CallState, CallType } from '../utils/WebRTCCallManager';
+// import CallScreen from '../components/CallScreen';
 
 const API_BASE_URL = 'http://localhost:3000/api';
 
@@ -67,14 +71,80 @@ export default function MessagesScreen() {
   const [selectedMessage, setSelectedMessage] = useState<Message | null>(null);
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
   const [replyContent, setReplyContent] = useState('');
+  
+  // 通话相关状态 (暂时禁用)
+  // const [socket, setSocket] = useState<any>(null);
+  // const [callManager, setCallManager] = useState<WebRTCCallManager | null>(null);
+  // const [showCallScreen, setShowCallScreen] = useState(false);
+  // const [callState, setCallState] = useState(CallState.IDLE);
+  // const [callType, setCallType] = useState(CallType.AUDIO);
+  // const [remoteUser, setRemoteUser] = useState<User | null>(null);
+  // const [localStream, setLocalStream] = useState<any>(null);
+  // const [remoteStream, setRemoteStream] = useState<any>(null);
+  // const [isMuted, setIsMuted] = useState(false);
+  // const [isCameraOff, setIsCameraOff] = useState(false);
 
   useEffect(() => {
     loadUser();
+    // initializeCallSystem(); // 暂时禁用
   }, []);
+
+  // 初始化通话系统
+  const initializeCallSystem = async () => {
+    try {
+      // 创建Socket.io连接
+      const newSocket = io('http://localhost:3001');
+      setSocket(newSocket);
+
+      // 创建WebRTC管理器
+      const manager = new WebRTCCallManager();
+      manager.setSocket(newSocket);
+      manager.setEventListeners({
+        onCallStateChange: (state: any) => {
+          setCallState(state);
+          if (state === CallState.ENDED || state === CallState.ERROR) {
+            setShowCallScreen(false);
+            setRemoteUser(null);
+            setLocalStream(null);
+            setRemoteStream(null);
+          }
+        },
+        onRemoteStream: (stream: any) => {
+          setRemoteStream(stream);
+        },
+        onError: (error: any) => {
+          console.error('通话错误:', error);
+          Alert.alert('通话错误', error.message || '未知错误');
+        },
+      });
+      setCallManager(manager);
+
+      // Socket.io事件监听
+      newSocket.on('connect', () => {
+        console.log('Socket.io 连接成功');
+      });
+
+      newSocket.on('disconnect', () => {
+        console.log('Socket.io 连接断开');
+      });
+
+      newSocket.on('error', (error) => {
+        console.error('Socket.io 错误:', error);
+      });
+
+    } catch (error) {
+      console.error('初始化通话系统失败:', error);
+    }
+  };
 
   useEffect(() => {
     if (user) {
       loadMessages();
+      // 用户加入Socket.io房间 (暂时禁用)
+      // socket.emit('join', {
+      //   userId: user.id,
+      //   nickname: user.nickname,
+      // });
     }
   }, [user]);
 
@@ -151,6 +221,15 @@ export default function MessagesScreen() {
       const diffInDays = Math.floor(diffInHours / 24);
       return `${diffInDays}天前`;
     }
+  };
+
+  // 通话相关函数 (暂时禁用)
+  const startAudioCall = async (message: Message) => {
+    Alert.alert('功能暂未开放', '语音通话功能正在开发中，敬请期待！');
+  };
+
+  const startVideoCall = async (message: Message) => {
+    Alert.alert('功能暂未开放', '视频通话功能正在开发中，敬请期待！');
   };
 
   const loadChatMessages = async (message: Message) => {
@@ -400,6 +479,22 @@ export default function MessagesScreen() {
             <Text style={styles.chatTitle}>
               与 {selectedMessage?.sender.nickname} 的对话
             </Text>
+            
+            {/* 通话按钮 */}
+            <View style={styles.callButtons}>
+              <TouchableOpacity
+                style={styles.callButton}
+                onPress={() => selectedMessage && startAudioCall(selectedMessage)}
+              >
+                <Icon name="phone" size={20} color="#007AFF" />
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.callButton}
+                onPress={() => selectedMessage && startVideoCall(selectedMessage)}
+              >
+                <Icon name="videocam" size={20} color="#007AFF" />
+              </TouchableOpacity>
+            </View>
           </View>
 
           {/* 聊天消息列表 */}
@@ -434,6 +529,26 @@ export default function MessagesScreen() {
           </View>
         </View>
       </Modal>
+
+      {/* 通话界面 (暂时禁用) */}
+      {/* {showCallScreen && (
+        <CallScreen
+          callType={callType}
+          remoteUser={remoteUser || undefined}
+          isIncoming={false}
+          onEndCall={endCall}
+          onAcceptCall={acceptCall}
+          onRejectCall={rejectCall}
+          localStream={localStream}
+          remoteStream={remoteStream}
+          callState={callState}
+          isMuted={isMuted}
+          isCameraOff={isCameraOff}
+          onToggleMute={toggleMute}
+          onToggleCamera={toggleCamera}
+          onSwitchCamera={switchCamera}
+        />
+      )} */}
     </View>
   );
 }
@@ -554,6 +669,18 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     flex: 1,
+  },
+  callButtons: {
+    flexDirection: 'row',
+    gap: 10,
+  },
+  callButton: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: 'rgba(255,255,255,0.2)',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   chatMessageList: {
     flex: 1,

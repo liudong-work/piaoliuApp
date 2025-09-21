@@ -36,7 +36,11 @@
 		</dict>
 	</dict>
 	<key>NSCameraUsageDescription</key>
-	<string>需要访问相机来拍摄头像</string>
+	<string>需要访问相机来拍摄头像和进行视频通话</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>需要访问麦克风来进行语音通话</string>
+	<key>NSLocalNetworkUsageDescription</key>
+	<string>需要访问本地网络以进行通话连接</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>需要访问相册来选择头像</string>
 	<key>UILaunchStoryboardName</key>
