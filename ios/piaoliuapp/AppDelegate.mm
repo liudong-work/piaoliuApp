@@ -1,7 +1,9 @@
 #import "AppDelegate.h"
+#import <float.h>
 
-#import <React-Core/React/RCTBundleURLProvider.h>
-#import <React-Core/React/RCTRootView.h>
+#import <React/RCTBundleURLProvider.h>
+#import <React/RCTRootView.h>
+#import <React/RCTBridge.h>
 
 @implementation AppDelegate
 

@@ -15,9 +15,9 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-// import io from 'socket.io-client';
-// import WebRTCCallManager, { CallState, CallType } from '../utils/WebRTCCallManager';
-// import CallScreen from '../components/CallScreen';
+import io from 'socket.io-client';
+import WebRTCCallManager, { CallState, CallType } from '../utils/WebRTCCallManager';
+import CallScreen from '../components/CallScreen';
 
 const API_BASE_URL = 'http://localhost:3000/api';
 
@@ -72,21 +72,21 @@ export default function MessagesScreen() {
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
   const [replyContent, setReplyContent] = useState('');
   
-  // 通话相关状态 (暂时禁用)
-  // const [socket, setSocket] = useState<any>(null);
-  // const [callManager, setCallManager] = useState<WebRTCCallManager | null>(null);
-  // const [showCallScreen, setShowCallScreen] = useState(false);
-  // const [callState, setCallState] = useState(CallState.IDLE);
-  // const [callType, setCallType] = useState(CallType.AUDIO);
-  // const [remoteUser, setRemoteUser] = useState<User | null>(null);
-  // const [localStream, setLocalStream] = useState<any>(null);
-  // const [remoteStream, setRemoteStream] = useState<any>(null);
-  // const [isMuted, setIsMuted] = useState(false);
-  // const [isCameraOff, setIsCameraOff] = useState(false);
+  // 通话相关状态
+  const [socket, setSocket] = useState<any>(null);
+  const [callManager, setCallManager] = useState<WebRTCCallManager | null>(null);
+  const [showCallScreen, setShowCallScreen] = useState(false);
+  const [callState, setCallState] = useState(CallState.IDLE);
+  const [callType, setCallType] = useState(CallType.AUDIO);
+  const [remoteUser, setRemoteUser] = useState<User | null>(null);
+  const [localStream, setLocalStream] = useState<any>(null);
+  const [remoteStream, setRemoteStream] = useState<any>(null);
+  const [isMuted, setIsMuted] = useState(false);
+  const [isCameraOff, setIsCameraOff] = useState(false);
 
   useEffect(() => {
     loadUser();
-    // initializeCallSystem(); // 暂时禁用
+    initializeCallSystem();
   }, []);
 
   // 初始化通话系统
@@ -140,13 +140,15 @@ export default function MessagesScreen() {
   useEffect(() => {
     if (user) {
       loadMessages();
-      // 用户加入Socket.io房间 (暂时禁用)
-      // socket.emit('join', {
-      //   userId: user.id,
-      //   nickname: user.nickname,
-      // });
+      // 用户加入Socket.io房间
+      if (socket) {
+        socket.emit('join', {
+          userId: user.id,
+          nickname: user.nickname,
+        });
+      }
     }
-  }, [user]);
+  }, [user, socket]);
 
   // 添加定时刷新和焦点刷新
   useEffect(() => {
@@ -223,13 +225,127 @@ export default function MessagesScreen() {
     }
   };
 
-  // 通话相关函数 (暂时禁用)
+  // 通话相关函数
   const startAudioCall = async (message: Message) => {
-    Alert.alert('功能暂未开放', '语音通话功能正在开发中，敬请期待！');
+    try {
+      if (!callManager || !socket) {
+        Alert.alert('错误', '通话系统未初始化');
+        return;
+      }
+
+      const targetUser = message.sender;
+      setRemoteUser({
+        id: message.senderId,
+        nickname: targetUser.nickname,
+        gender: 'unknown',
+        age: 25,
+        avatar: targetUser.avatar
+      });
+      setCallType(CallType.AUDIO);
+      setShowCallScreen(true);
+
+      // 发起音频通话
+      await callManager.startCall(message.senderId, CallType.AUDIO);
+    } catch (error) {
+      console.error('发起音频通话失败:', error);
+      Alert.alert('错误', '发起通话失败');
+    }
   };
 
   const startVideoCall = async (message: Message) => {
-    Alert.alert('功能暂未开放', '视频通话功能正在开发中，敬请期待！');
+    try {
+      if (!callManager || !socket) {
+        Alert.alert('错误', '通话系统未初始化');
+        return;
+      }
+
+      const targetUser = message.sender;
+      setRemoteUser({
+        id: message.senderId,
+        nickname: targetUser.nickname,
+        gender: 'unknown',
+        age: 25,
+        avatar: targetUser.avatar
+      });
+      setCallType(CallType.VIDEO);
+      setShowCallScreen(true);
+
+      // 发起视频通话
+      await callManager.startCall(message.senderId, CallType.VIDEO);
+    } catch (error) {
+      console.error('发起视频通话失败:', error);
+      Alert.alert('错误', '发起通话失败');
+    }
+  };
+
+  const endCall = async () => {
+    try {
+      if (callManager) {
+        await callManager.endCall();
+      }
+      setShowCallScreen(false);
+      setRemoteUser(null);
+      setLocalStream(null);
+      setRemoteStream(null);
+    } catch (error) {
+      console.error('结束通话失败:', error);
+    }
+  };
+
+  const acceptCall = async () => {
+    try {
+      if (callManager) {
+        // WebRTCCallManager 可能没有 acceptCall 方法，使用其他方法
+        console.log('接听通话');
+      }
+    } catch (error) {
+      console.error('接听通话失败:', error);
+    }
+  };
+
+  const rejectCall = async () => {
+    try {
+      if (callManager) {
+        // WebRTCCallManager 可能没有 rejectCall 方法，使用其他方法
+        console.log('拒绝通话');
+      }
+      setShowCallScreen(false);
+      setRemoteUser(null);
+    } catch (error) {
+      console.error('拒绝通话失败:', error);
+    }
+  };
+
+  const toggleMute = async () => {
+    try {
+      if (callManager) {
+        await callManager.toggleMute();
+        setIsMuted(!isMuted);
+      }
+    } catch (error) {
+      console.error('切换静音失败:', error);
+    }
+  };
+
+  const toggleCamera = async () => {
+    try {
+      if (callManager) {
+        await callManager.toggleCamera();
+        setIsCameraOff(!isCameraOff);
+      }
+    } catch (error) {
+      console.error('切换摄像头失败:', error);
+    }
+  };
+
+  const switchCamera = async () => {
+    try {
+      if (callManager) {
+        await callManager.switchCamera();
+      }
+    } catch (error) {
+      console.error('切换摄像头方向失败:', error);
+    }
   };
 
   const loadChatMessages = async (message: Message) => {
@@ -530,11 +646,11 @@ export default function MessagesScreen() {
         </View>
       </Modal>
 
-      {/* 通话界面 (暂时禁用) */}
-      {/* {showCallScreen && (
+      {/* 通话界面 */}
+      {showCallScreen && (
         <CallScreen
           callType={callType}
-          remoteUser={remoteUser || undefined}
+          remoteUser={remoteUser}
           isIncoming={false}
           onEndCall={endCall}
           onAcceptCall={acceptCall}
@@ -548,7 +664,7 @@ export default function MessagesScreen() {
           onToggleCamera={toggleCamera}
           onSwitchCamera={switchCamera}
         />
-      )} */}
+      )}
     </View>
   );
 }

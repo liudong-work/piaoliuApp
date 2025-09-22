@@ -1,0 +1,19 @@
+//
+//  piaoliuapp-Prefix.pch
+//  piaoliuapp
+//
+//  Created by React Native on 22/09/2025.
+//
+
+#ifndef piaoliuapp_Prefix_pch
+#define piaoliuapp_Prefix_pch
+
+#ifdef __OBJC__
+    #import <UIKit/UIKit.h>
+    #import <Foundation/Foundation.h>
+    #import <float.h>
+    #import <math.h>
+    #import <limits.h>
+#endif
+
+#endif /* piaoliuapp_Prefix_pch */
