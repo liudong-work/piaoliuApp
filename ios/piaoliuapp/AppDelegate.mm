@@ -1,5 +1,6 @@
 #import "AppDelegate.h"
 #import <float.h>
+#import <limits.h>
 
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTRootView.h>

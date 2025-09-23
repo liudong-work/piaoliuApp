@@ -2,32 +2,22 @@ require_relative '../node_modules/react-native/scripts/react_native_pods'
 require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'
 
 platform :ios, '15.0'
+install! 'cocoapods', :deterministic_uuids => false
 
 target 'piaoliuapp' do
   config = use_native_modules!
 
-  # 使用特定版本的 RCT-Folly 避免编译错误
-  pod 'RCT-Folly', :podspec => '../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec'
-  
-  # 添加 react-native-vector-icons
-  pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
-  
-  # WebRTC 相关依赖 (使用官方版本)
-  pod 'RNPermissions', :path => '../node_modules/react-native-permissions'
-  pod 'ReactNativeIncallManager', :path => '../node_modules/react-native-incall-manager'
-  pod 'react-native-webrtc', :path => '../node_modules/react-native-webrtc'
-
-  # React Native 核心库
+  # React Native 0.72.17 标准配置
   use_react_native!(
     :path => config[:reactNativePath],
-    :hermes_enabled => false,        # 禁用 Hermes 避免 RCT-Folly 问题
-    :fabric_enabled => false,        # 可改 true 开启新架构 Fabric
+    :hermes_enabled => false,
+    :fabric_enabled => false,
     :flipper_configuration => FlipperConfiguration.disabled,
     :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
-  
-  # 完全禁用 RCT-Folly 以避免编译问题
-  pod 'RCT-Folly', :podspec => '../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec', :inhibit_warnings => true
+
+  # 修复 react-native-image-picker 的 limits.h 问题
+  pod 'react-native-image-picker', :path => '../node_modules/react-native-image-picker'
 
   target 'piaoliuappTests' do
     inherit! :complete
@@ -38,68 +28,66 @@ target 'piaoliuapp' do
       installer,
       :mac_catalyst_enabled => false
     )
-
-    # 👇 推荐加上这一段，解决 iOS 构建时头文件找不到的问题
-  installer.pods_project.targets.each do |target|
-    target.build_configurations.each do |config|
-      config.build_settings['CLANG_CXX_LANGUAGE_STANDARD'] = 'c++17'
-      config.build_settings['CLANG_CXX_LIBRARY'] = 'libc++'
-      config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '15.0'
-      
-  # RCT-Folly 警告已通过 :inhibit_warnings => true 禁用
-  
-  # 方法2: 给 RCT-Folly 添加编译参数忽略 typedef 冲突
-  if target.name == 'RCT-Folly'
-    config.build_settings['OTHER_CFLAGS'] ||= ['$(inherited)']
-    config.build_settings['OTHER_CFLAGS'] << '-Wno-typedef-redefinition'
-    config.build_settings['OTHER_CFLAGS'] << '-Wno-error=typedef-redefinition'
-    config.build_settings['GCC_WARN_TYPEDEF_REDEFINITION'] = 'NO'
-    config.build_settings['GCC_WARN_MACRO_REDEFINITION'] = 'NO'
-    config.build_settings['GCC_WARN_INHIBIT_ALL_WARNINGS'] = 'YES'
-  end
-      
-      # 解决 WebRTC 编译错误
-      if target.name == 'react-native-webrtc'
-        config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] ||= []
-        config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] << 'WEBRTC_IOS=1'
-        config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] << 'WEBRTC_MAC=1'
-        config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] << 'WEBRTC_POSIX=1'
-        config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] << 'WEBRTC_ARCH_ARM64=1'
-        config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] << 'WEBRTC_ARCH_X86_64=1'
-        # 确保使用正确的 iOS SDK
+    
+    # 修复iOS 15+ 的构建问题
+    installer.pods_project.targets.each do |target|
+      target.build_configurations.each do |config|
         config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '15.0'
-        # 添加必要的框架
-        config.build_settings['OTHER_LDFLAGS'] ||= []
-        config.build_settings['OTHER_LDFLAGS'] << '-framework AVFoundation'
-        config.build_settings['OTHER_LDFLAGS'] << '-framework CoreMedia'
-        config.build_settings['OTHER_LDFLAGS'] << '-framework CoreVideo'
-      end
-      
-      # 解决 FLT_MAX 和 FLT_MIN 未声明错误
-      if target.name.include?('boost') || target.name.include?('RCT-Folly')
-        config.build_settings['OTHER_CFLAGS'] ||= ['$(inherited)']
-        config.build_settings['OTHER_CFLAGS'] << '-include'
-        config.build_settings['OTHER_CFLAGS'] << 'float.h'
-        config.build_settings['OTHER_CFLAGS'] << '-include'
-        config.build_settings['OTHER_CFLAGS'] << 'math.h'
-        config.build_settings['OTHER_CFLAGS'] << '-include'
-        config.build_settings['OTHER_CFLAGS'] << 'limits.h'
+        config.build_settings['CLANG_CXX_LANGUAGE_STANDARD'] = 'c++17'
+        config.build_settings['CLANG_CXX_LIBRARY'] = 'libc++'
+        
+        # 修复 react-native-image-picker 的 limits.h 和 yoga/YGValue.h 问题
+        if target.name == 'react-native-image-picker'
+          config.build_settings['HEADER_SEARCH_PATHS'] ||= []
+          config.build_settings['HEADER_SEARCH_PATHS'] << '$(SDKROOT)/usr/include'
+          config.build_settings['HEADER_SEARCH_PATHS'] << '$(PODS_ROOT)/Headers/Public/Yoga'
+        end
+        
+        # 修复主应用的 FLT_MAX/FLT_MIN 问题
+        if target.name == 'piaoliuapp'
+          config.build_settings['HEADER_SEARCH_PATHS'] ||= []
+          # 排除 Android 平台的头文件路径
+          config.build_settings['HEADER_SEARCH_PATHS'] = config.build_settings['HEADER_SEARCH_PATHS'].reject { |path| 
+            path.include?('android') || path.include?('Android') || path.include?('platform/android')
+          }
+        end
+        
+        # 修复 fmt 库的头文件路径问题
+        if target.name == 'fmt'
+          config.build_settings['HEADER_SEARCH_PATHS'] ||= []
+          config.build_settings['HEADER_SEARCH_PATHS'] << '$(PODS_ROOT)/fmt/include'
+        end
+        
+        # 修复 RCT-Folly 库的头文件路径问题
+        if target.name == 'RCT-Folly'
+          config.build_settings['HEADER_SEARCH_PATHS'] ||= []
+          config.build_settings['HEADER_SEARCH_PATHS'] << '$(PODS_ROOT)/RCT-Folly'
+        end
+        
+        # 修复 glog 库的头文件路径问题
+        if target.name == 'glog'
+          config.build_settings['HEADER_SEARCH_PATHS'] ||= []
+          config.build_settings['HEADER_SEARCH_PATHS'] << '$(PODS_ROOT)/glog/src'
+        end
+        
+        # 修复 RCTTypeSafety 的 FBLazyVector 头文件路径问题
+        if target.name == 'RCTTypeSafety'
+          config.build_settings['HEADER_SEARCH_PATHS'] ||= []
+          config.build_settings['HEADER_SEARCH_PATHS'] << '$(PODS_ROOT)/Headers/Public/FBLazyVector'
+        end
+        
+        # 修复 React-logger 的 glog 头文件路径问题
+        if target.name == 'React-logger'
+          config.build_settings['HEADER_SEARCH_PATHS'] ||= []
+          config.build_settings['HEADER_SEARCH_PATHS'] << '$(PODS_ROOT)/glog/src'
+        end
+        
+        # 对所有目标排除 Android 路径
+        config.build_settings['HEADER_SEARCH_PATHS'] ||= []
+        config.build_settings['HEADER_SEARCH_PATHS'] = config.build_settings['HEADER_SEARCH_PATHS'].reject { |path| 
+          path.include?('android') || path.include?('Android') || path.include?('platform/android')
+        }
       end
     end
-  end
-
-  # 解决 RCT-Folly 的 clockid_t 重定义问题
-  # 通过在 post_install 阶段修改 Time.h 文件
-  file_path = "#{installer.pods_project.path}/../Pods/RCT-Folly/folly/portability/Time.h"
-  if File.exist?(file_path)
-    content = File.read(file_path)
-    # 查找并替换 typedef uint8_t clockid_t;
-    # 确保只替换未被宏包裹的定义
-    if content.include?("typedef uint8_t clockid_t;") && !content.include?("#ifndef __APPLE__\ntypedef uint8_t clockid_t;\n#endif")
-      new_content = content.gsub("typedef uint8_t clockid_t;", "#ifndef __APPLE__\ntypedef uint8_t clockid_t;\n#endif")
-      File.open(file_path, "w") { |file| file.puts new_content }
-      puts "✅ Successfully patched RCT-Folly/folly/portability/Time.h for clockid_t redefinition."
-    end
-  end
   end
 end
